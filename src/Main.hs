@@ -26,7 +26,8 @@ requestAction game = do
         if roomEqual room exitRoom || roomEqual room quitRoom then
           return ()
         else do
-          putStrLn $ describeFoundItems room
+          putStr $ describeFoundItems room
+          hFlush stdout
           requestAction (Game room (processItems game room))
       Left err -> requestAction game
     return ()

@@ -61,7 +61,7 @@ processItems (Game room items) (Room _ _ roomItems _) = roomItems ++ items
 
 describeFoundItems :: Room -> String
 describeFoundItems (Room _ _ [] _) = ""
-describeFoundItems (Room _ _ items _) = "You've found the following items: " ++ (expandItems "" items)
+describeFoundItems (Room _ _ items _) = "You've found the following items: " ++ (expandItems "" items) ++ "\n"
 
 expandItems :: String -> [Item] -> String
 expandItems curString (item:[]) = item
