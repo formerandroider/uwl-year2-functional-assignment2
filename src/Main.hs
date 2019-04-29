@@ -1,7 +1,6 @@
 module Main where
 
 import System.IO
-import Debug.Trace
 import Data.Either (isRight)
 import Game
 import Types
@@ -19,10 +18,14 @@ requestAction game = do
     action <- getLine
     let newRoom = processCommand game (parseCommand action)
     putStrLn $ roomDescriptionOrMessage newRoom
-    if isRight newRoom then
-      requestAction (Game (roomOnly newRoom) (processItems game (roomOnly newRoom)))
-    else
-        requestAction game
+    case newRoom of
+      Right room -> do
+        if roomEqual room exitRoom || roomEqual room quitRoom then
+          return ()
+        else do
+          putStrLn $ describeFoundItems room
+          requestAction (Game room (processItems game room))
+      Left err -> requestAction game
     return ()
 
 processCommand :: Game -> Maybe Command -> Either String Room
@@ -31,6 +34,7 @@ processCommand game (Just (Command Move "n")) = moveInDirection game N
 processCommand game (Just (Command Move "s")) = moveInDirection game S
 processCommand game (Just (Command Move "e")) = moveInDirection game E
 processCommand game (Just (Command Move "w")) = moveInDirection game W
+processCommand _ (Just (Command Quit _)) = Right quitRoom
 processCommand _ (Just (Command Move _)) = Left "Invalid direction"
 
 moveInDirection :: Game -> Direction -> Either String Room

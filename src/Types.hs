@@ -16,6 +16,11 @@ roomOnly :: Either String Room -> Room
 roomOnly (Right room) = room
 roomOnly _ = error "Invalid operation"
 
+roomEqual :: Room -> Room -> Bool
+roomEqual (Room name1 _ _ _) (Room name2 _ _ _)
+  | name1 == name2 = True
+  | otherwise = False
+
 roomDescriptionOrMessage :: Either String Room -> String
 roomDescriptionOrMessage (Right room) = roomDescription room
 roomDescriptionOrMessage (Left err) = err
@@ -55,7 +60,13 @@ processItems :: Game -> Room -> [Item]
 processItems (Game room items) (Room _ _ roomItems _) = roomItems ++ items
 
 describeFoundItems :: Room -> String
-describeFoundItems (Room _ _ items _) = "You've found the following items: " ++
+describeFoundItems (Room _ _ [] _) = ""
+describeFoundItems (Room _ _ items _) = "You've found the following items: " ++ (expandItems "" items)
+
+expandItems :: String -> [Item] -> String
+expandItems curString (item:[]) = item
+expandItems curString (item:items) = expandItems (curString ++ ", " ++ item) items
+expandItems curString [] = ""
 
 -- A grid of rooms
 data Grid = Grid [Location] deriving Show
