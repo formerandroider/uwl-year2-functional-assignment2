@@ -17,6 +17,7 @@ main = do
 requestAction :: Game -> IO ()
 requestAction game = do
     putStr "action> "
+    hFlush stdout
     action <- getLine
     let newRoom = processCommand game (parseCommand action)
     putStrLn $ roomDescriptionOrMessage newRoom
