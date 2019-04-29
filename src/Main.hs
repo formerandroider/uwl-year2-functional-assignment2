@@ -7,6 +7,8 @@ import Types
 
 main :: IO ()
 main = do
+    putStrLn "Welcome. The following commands are available: move n|s|e|w, quit"
+    putStrLn ""
     let newRoom = Game.startingRoom
     putStrLn $ roomDescription newRoom
     requestAction (Game newRoom [])
